@@ -8,11 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class Crawler {
+public class CrawlerService {
 
     @Autowired
 	private UncrawledSiteService uncrawledSiteService;
-    public Crawler(){
+    public CrawlerService(){
         this.getLinks("https://www.facebook.com");
     }
     public void getLinks(String siteUrl) {

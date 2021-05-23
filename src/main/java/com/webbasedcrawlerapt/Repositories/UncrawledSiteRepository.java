@@ -1,12 +1,11 @@
 package com.webbasedcrawlerapt.Repositories;
-
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
-
 import com.webbasedcrawlerapt.Models.UncrawledSite;
 
-
+@Repository
 public interface UncrawledSiteRepository extends JpaRepository<UncrawledSite, Integer> {
 
     
