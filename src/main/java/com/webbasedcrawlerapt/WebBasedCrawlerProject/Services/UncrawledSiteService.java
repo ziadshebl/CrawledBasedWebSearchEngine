@@ -1,8 +1,8 @@
-package com.webbasedcrawlerapt.Services;
+package com.webbasedcrawlerapt.WebBasedCrawlerProject.Services;
 import java.util.Optional;
 
-import com.webbasedcrawlerapt.Models.UncrawledSite;
-import com.webbasedcrawlerapt.Repositories.UncrawledSiteRepository;
+import com.webbasedcrawlerapt.WebBasedCrawlerProject.Models.UncrawledSite;
+import com.webbasedcrawlerapt.WebBasedCrawlerProject.Repositories.UncrawledSiteRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

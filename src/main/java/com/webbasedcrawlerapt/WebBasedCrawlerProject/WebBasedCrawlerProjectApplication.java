@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 
-// @SpringBootApplication
 @EnableJpaRepositories
 @SpringBootApplication(exclude = SecurityAutoConfiguration.class)
 @EnableWebMvc
@@ -15,8 +14,8 @@ public class WebBasedCrawlerProjectApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(WebBasedCrawlerProjectApplication.class, args);
         System.out.println("Application context initialized!!!");
+		
 	}
-
 
 }
 
