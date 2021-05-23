@@ -13,8 +13,9 @@ public class CrawlerService {
     @Autowired
 	private UncrawledSiteService uncrawledSiteService;
 
-    public void getLinks(String siteUrl) {
+    public void startCrawling() {
         try {
+            String siteUrl = "https://www.stackoverflow.com";
             Document doc = Jsoup.connect(siteUrl).userAgent("Mozilla").get();
             Elements links = doc.select("a");
 
@@ -24,13 +25,7 @@ public class CrawlerService {
             int index = 0;
             for (org.jsoup.nodes.Element link : links) {
                 String foundUrl = link.attr("abs:href").toLowerCase();
-                System.out.println(foundUrl);
                 uncrawledSiteService.addUncrawledSite(index, foundUrl);
-                index +=1; 
-                // if( isSuitable(foundUrl) && ( !hs.contains(foundUrl) ) ) {
-                //     hs.add(foundUrl);
-                //     crawl(foundUrl);
-                // }
             }
 
         } catch (IOException ex) {

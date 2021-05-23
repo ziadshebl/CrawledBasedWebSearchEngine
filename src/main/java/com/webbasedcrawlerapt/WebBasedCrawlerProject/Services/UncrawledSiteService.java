@@ -31,7 +31,7 @@ public class UncrawledSiteService {
 	public ResponseEntity<?> addUncrawledSite(int uncrawledSiteId, String url) {
 		
 		UncrawledSite newSite = new UncrawledSite();
-		newSite.setId(uncrawledSiteId);
+		//newSite.setId(uncrawledSiteId);
         newSite.setUrl(url);
 		
 		// save resource object
