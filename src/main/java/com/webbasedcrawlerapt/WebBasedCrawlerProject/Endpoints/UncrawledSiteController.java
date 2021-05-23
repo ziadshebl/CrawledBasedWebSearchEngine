@@ -18,15 +18,15 @@ public class UncrawledSiteController {
     @Autowired
 	private UncrawledSiteService uncrawledSiteService;
 	
-	@RequestMapping(method = RequestMethod.GET, value = "/uncrawledSite/{uncrawledSiteId}")
-	public ResponseEntity<?> getUncrawledSite(@PathVariable int uncrawledSiteId) {
+	// @RequestMapping(method = RequestMethod.GET, value = "/uncrawledSite/{uncrawledSiteId}")
+	// public ResponseEntity<?> getUncrawledSite(@PathVariable int uncrawledSiteId) {
 		
-		return uncrawledSiteService.getUncrawledSiteById(uncrawledSiteId);
-	}
+	// 	return uncrawledSiteService.getUncrawledSiteById(uncrawledSiteId);
+	// }
 	
-	@RequestMapping(method = RequestMethod.POST, value = "/uncrawledSite")
-	public ResponseEntity<?> addUncrawledSite(@RequestParam(name="account") int uncrawledSiteId, @RequestBody String url) {
+	// @RequestMapping(method = RequestMethod.POST, value = "/uncrawledSite")
+	// public ResponseEntity<?> addUncrawledSite(@RequestParam(name="account") int uncrawledSiteId, @RequestBody String url) {
 		
-		return uncrawledSiteService.addUncrawledSite(uncrawledSiteId, url);
-	}
+	// 	return uncrawledSiteService.addUncrawledSite(uncrawledSiteId, url);
+	// }
 }

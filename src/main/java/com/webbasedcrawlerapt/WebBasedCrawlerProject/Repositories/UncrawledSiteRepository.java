@@ -13,9 +13,14 @@ public interface UncrawledSiteRepository extends JpaRepository<UncrawledSite, In
     
     public Optional<UncrawledSite> findUncrawledSiteById(int siteId);
 
-    @Query(value="INSERT INTO (id, url)  Uncrawled_Site  VALUES (:id, :url)", nativeQuery = true)
-    void addUncrawledSite(int id, String url);
+
+    // @Query(value="INSERT INTO (id, url, isVisited)  Uncrawled_Site  VALUES (:id, :url, :isVisited)", nativeQuery = true)
+    // void addUncrawledSite(int id, String url, boolean isVisited);
 	
+
+
+    @Query(value = "SELECT * FROM Uncrawled_Sites WHERE url = ':url' LIMIT 1", nativeQuery = true)
+    UncrawledSite checkIfSiteExists(String url);
     // @Query(value = "SELECT * From boms_engineer as E join boms_resource as R on E.resource_Id=R.Id where R.account_id= :accountId " ,nativeQuery = true)
 	// public Page<Engineer> findByAccountId(@Param("accountId")Long accountId, Pageable paging);
 	

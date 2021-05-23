@@ -26,6 +26,9 @@ public class UncrawledSite {
     @NonNull
 	private String url;
 
+	@NonNull
+	private boolean isVisited;
+
 	public int getId() {
 		return id;
 	}
@@ -39,5 +42,13 @@ public class UncrawledSite {
 	}
 	public void setUrl(String url) {
 		this.url = url;
+	}
+
+	public boolean getIsVisited(){
+		return isVisited;
+	}
+
+	public void setIsVisited(boolean isVisited){
+		this.isVisited = isVisited;
 	}
 }

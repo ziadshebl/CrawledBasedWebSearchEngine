@@ -10,16 +10,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/")
 public class CrawlingController {
 
     @Autowired
 	private CrawlerService crawlerService;
 	
-	@RequestMapping(method = RequestMethod.GET, value = "ziad")
+	@RequestMapping(method = RequestMethod.GET, value = "/")
 	public ResponseEntity<?> getUncrawledSite() {
-        System.out.println("FUNCTION CALLED");
-        crawlerService.getLinks("https://www.stackoverflow.com");
+        crawlerService.startCrawling();
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 }
