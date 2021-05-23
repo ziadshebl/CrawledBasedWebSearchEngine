@@ -1,4 +1,4 @@
-package com.webbasedcrawlerapt.Models;
+package com.webbasedcrawlerapt.WebBasedCrawlerProject.Models;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

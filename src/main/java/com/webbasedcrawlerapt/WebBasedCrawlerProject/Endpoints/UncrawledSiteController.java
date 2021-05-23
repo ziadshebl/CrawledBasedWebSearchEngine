@@ -1,6 +1,6 @@
-package com.webbasedcrawlerapt.Endpoints;
+package com.webbasedcrawlerapt.WebBasedCrawlerProject.Endpoints;
 
-import com.webbasedcrawlerapt.Services.UncrawledSiteService;
+import com.webbasedcrawlerapt.WebBasedCrawlerProject.Services.UncrawledSiteService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

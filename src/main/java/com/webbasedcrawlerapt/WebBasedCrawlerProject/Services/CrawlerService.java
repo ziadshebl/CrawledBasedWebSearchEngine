@@ -1,4 +1,4 @@
-package com.webbasedcrawlerapt.Services;
+package com.webbasedcrawlerapt.WebBasedCrawlerProject.Services;
 
 import java.io.IOException;
 import org.jsoup.Jsoup;
