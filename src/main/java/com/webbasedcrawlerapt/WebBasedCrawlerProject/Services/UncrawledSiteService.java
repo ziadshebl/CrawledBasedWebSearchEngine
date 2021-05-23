@@ -28,16 +28,27 @@ public class UncrawledSiteService {
 		return new ResponseEntity<>(targetSite, HttpStatus.OK);
 	}
 	
-	public ResponseEntity<?> addUncrawledSite(int uncrawledSiteId, String url) {
+	public ResponseEntity<?> addUncrawledSite(String url, boolean isVisited) {
 		
 		UncrawledSite newSite = new UncrawledSite();
-		//newSite.setId(uncrawledSiteId);
+
         newSite.setUrl(url);
+		newSite.setIsVisited(isVisited);
 		
+		// System.ou
+
 		// save resource object
 		uncrawledSiteRepository.save(newSite);
 		
 		return new ResponseEntity<>(newSite, HttpStatus.OK);
 		
+	}
+
+	public ResponseEntity<?> checkIfSiteExists(String urlToFind){
+		
+		System.out.println("URLLLLLL:"+urlToFind);
+		UncrawledSite site = uncrawledSiteRepository.checkIfSiteExists(urlToFind);
+		System.out.println(site);
+		return new ResponseEntity<>(site, HttpStatus.OK);
 	}
 }
