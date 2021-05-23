@@ -1,5 +1,6 @@
 package com.webbasedcrawlerapt.WebBasedCrawlerProject.Models;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -18,7 +19,8 @@ import lombok.Setter;
 @Table(name = "UNCRAWLED_SITES")
 public class UncrawledSite {
     @Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	@Column(name = "id")
 	private int id; 
 
     @NonNull

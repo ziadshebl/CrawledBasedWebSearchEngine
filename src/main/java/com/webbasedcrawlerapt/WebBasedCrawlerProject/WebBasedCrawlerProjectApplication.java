@@ -6,9 +6,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 
-@EnableJpaRepositories
-@SpringBootApplication(exclude = SecurityAutoConfiguration.class)
-@EnableWebMvc
+@SpringBootApplication
 public class WebBasedCrawlerProjectApplication {
 
 	public static void main(String[] args) {
