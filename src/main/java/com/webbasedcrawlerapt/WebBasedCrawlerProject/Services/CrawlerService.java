@@ -12,9 +12,7 @@ public class CrawlerService {
 
     @Autowired
 	private UncrawledSiteService uncrawledSiteService;
-    public CrawlerService(){
-        this.getLinks("https://www.facebook.com");
-    }
+
     public void getLinks(String siteUrl) {
         try {
             Document doc = Jsoup.connect(siteUrl).userAgent("Mozilla").get();
@@ -35,31 +33,8 @@ public class CrawlerService {
                 // }
             }
 
-            // boolean ok=false;
-            // URL url=null;  
-            // //BufferedReader bufferedReader=null;
-            // while(!uncrawledUrlQueue.isEmpty()){
-            //     String crawledUrl=uncrawledUrlQueue.poll();     //Dequeue from the queue
-            //     String robotCrawledUrl=crawledUrl+"/robots.txt";
-            //     System.out.println("The crawled site is: "+crawledUrl);
-            //     while(!ok){
-            //         try {
-            //             url=new URL(crawledUrl);
-            //             //bufferedReader=new BufferedReader(new InputStreamReader(url.openStream()));
-            //             ok=true;
-            //             visitedUrls.add(crawledUrl);
-                    
-            //         }catch (IOException ioError){
-            //             System.out.println("IOException for  Url"+crawledUrl);
-            //             crawledUrl=uncrawledUrlQueue.poll();
-            //             ok=false;
-            //         }
-            //     }
-            
-            
-            // }
         } catch (IOException ex) {
-
+            System.out.println(ex.getMessage());
         }
 
     }

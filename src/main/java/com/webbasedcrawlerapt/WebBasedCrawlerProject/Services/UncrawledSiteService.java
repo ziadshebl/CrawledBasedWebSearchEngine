@@ -12,11 +12,9 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UncrawledSiteService {
-
     
     @Autowired
     private UncrawledSiteRepository uncrawledSiteRepository;
-
 
     public ResponseEntity<?> getUncrawledSiteById(int uncrawledId) {
 		
