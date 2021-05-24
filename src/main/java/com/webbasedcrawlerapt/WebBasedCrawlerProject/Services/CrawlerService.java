@@ -1,15 +1,18 @@
 package com.webbasedcrawlerapt.WebBasedCrawlerProject.Services;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
 import com.webbasedcrawlerapt.WebBasedCrawlerProject.Models.UncrawledSite;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,23 +21,55 @@ public class CrawlerService {
     @Autowired
 	private UncrawledSiteService uncrawledSiteService;
 
+
+    public ArrayList<String> readSeeds(){
+        ArrayList<String> data = new ArrayList<String>() ;
+        try {
+            File txt = new File("C:/Users/Ziadkamal/Desktop/Senior-1/APT/WebBasedCrawlerProject/WebBasedCrawlerProject/src/seeds.txt");
+            Scanner scan;
+            
+            scan = new Scanner(txt);
+            while(scan.hasNextLine()){
+                data.add(scan.nextLine());
+            }
+
+            scan.close();
+           
+        } catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return data;
+      
+      
+       
+    }
+
+    //TODO: THREADING
     public void startCrawling() {
         try {
-            String siteUrl = "https://www.stackoverflow.com";
-            ResponseEntity<?> temp = uncrawledSiteService.checkIfSiteExists("https://www.stackoverflow.com");
-            // System.out.println(temp.getBody());
-            Document doc = Jsoup.connect(siteUrl).userAgent("Mozilla").get();
-            //Elements links = doc.select("a");
-            // System.out.println(doc.body().text());
 
-            // if (links.isEmpty()) {
-            //     return;
-            // }
-  
-            // for (org.jsoup.nodes.Element link : links) {
-            //     String foundUrl = link.attr("abs:href").toLowerCase();
-            //     uncrawledSiteService.addUncrawledSite(foundUrl, false);
-            // }
+            //RUN SEEDS AND ADD IT TO THE DATABASE
+            ArrayList<String> seeds = readSeeds();
+            for (String x: seeds){
+                uncrawledSiteService.addUncrawledSite(x, false);
+            }
+
+            String siteUrl = "https://www.geeksforgeeks.org/";
+            List<UncrawledSite> temp = uncrawledSiteService.findUncrawledSiteByUrl(siteUrl);
+            System.out.println(temp.size());
+            Document doc = Jsoup.connect(siteUrl).userAgent("Mozilla").get();
+
+            //(SORTED)WHILE THERE URLS WITH FALSE ISVISITED ATTRIBUTE || REACH LIMIT
+                //HANEMSEK AWEL WA7DA
+                //NEGEB EL BODY W NESHOF HAN3MEL BEH EH
+                //NEGEBE EL URLS
+                    //LKOL URL NCALL ROBOTS
+                    //LKOL URL NCHECK ENAHA MSH MAWGODA
+                    //LW MSH MAWGODA W EL ROBOTS AMAN NEZAWEDHA FEL DATABASE
+                //NE2LEB EL ISVISITED NE5ALEHA TRUE    
+            
+            
 
         } catch (IOException ex) {
             System.out.println(ex.getMessage());
