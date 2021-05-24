@@ -1,7 +1,14 @@
 package com.webbasedcrawlerapt.WebBasedCrawlerProject.Services;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.MalformedInputException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
 import com.webbasedcrawlerapt.WebBasedCrawlerProject.Models.UncrawledSite;
 
@@ -9,7 +16,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,25 +24,94 @@ public class CrawlerService {
     @Autowired
 	private UncrawledSiteService uncrawledSiteService;
 
-    public void startCrawling() {
+
+    public ArrayList<String> readSeeds(){
+        ArrayList<String> data = new ArrayList<String>() ;
         try {
-            String siteUrl = "https://www.stackoverflow.com";
-            ResponseEntity<?> temp = uncrawledSiteService.checkIfSiteExists("https://www.stackoverflow.com");
-            // System.out.println(temp.getBody());
-            Document doc = Jsoup.connect(siteUrl).userAgent("Mozilla").get();
-            //Elements links = doc.select("a");
-            // System.out.println(doc.body().text());
+            File txt = new File("C:/Users/Ziadkamal/Desktop/Senior-1/APT/WebBasedCrawlerProject/WebBasedCrawlerProject/src/seeds.txt");
+            Scanner scan;
+            
+            scan = new Scanner(txt);
+            while(scan.hasNextLine()){
+                data.add(scan.nextLine());
+            }
 
-            // if (links.isEmpty()) {
-            //     return;
-            // }
-  
-            // for (org.jsoup.nodes.Element link : links) {
-            //     String foundUrl = link.attr("abs:href").toLowerCase();
-            //     uncrawledSiteService.addUncrawledSite(foundUrl, false);
-            // }
+            scan.close();
+           
+        } catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return data;
+      
+      
+       
+    }
 
+    //TODO: THREADING
+    public void startCrawling() {
+
+        try {
+
+            //RUN SEEDS AND ADD IT TO THE DATABASE
+            ArrayList<String> seeds = readSeeds();
+            for (String x: seeds){
+                uncrawledSiteService.addUncrawledSite(x, false);
+            }
+
+            int count = seeds.size();
+            List<UncrawledSite> sites = uncrawledSiteService.findUncrawledSiteByIsNotVisited();
+          
+            //LW MAWSELTESH LEL LIMIT BTA3Y W LESA 3ANDY 7AGAT NOT VISITED
+            while (count!=50 && sites.size()!=0){
+                String siteUrl = sites.get(0).getUrl();
+                //TODO: CHECK ROBOTS HENA
+                Document doc = Jsoup.connect(siteUrl).userAgent("Mozilla").get();
+                Elements links = doc.select("a");
+                
+                links.forEach((link)->{
+                    String urlString = link.attr("abs:href");
+                    URL url;
+                    try {
+                        url = new URL(urlString);
+                        //CHECK EL PROTOCOL 3LSHAN LW FEH MAILTO: BADAL HTTPS AW HTTP
+                        if (url.getProtocol().equals("https") || url.getProtocol().equals("http")){
+                           
+                            //AT2AKED ENO MSH MAWGODA FEL DATABASE ALREADY
+                            List<UncrawledSite> temp = uncrawledSiteService.findUncrawledSiteByUrl(urlString);
+                            if(temp.size()==0){
+                                System.out.println(urlString);
+                                //ADD IT FEL DATABASE
+                                uncrawledSiteService.addUncrawledSite(urlString, false);
+                            }
+                        }
+                    } catch (MalformedURLException e) {
+                        System.out.println(e.getMessage());
+                    }   
+                });
+                //NE2LEB EL ISVISITED W NEZAWED EL COUNT
+                uncrawledSiteService.updateIsVisitedById(sites.get(0).getId());
+                count+=1;
+
+                sites = uncrawledSiteService.findUncrawledSiteByIsNotVisited();
+            }
+
+
+            //(SORTED)WHILE THERE URLS WITH FALSE ISVISITED ATTRIBUTE || REACH LIMIT
+                //HANEMSEK AWEL WA7DA
+                //NEGEB EL BODY W NESHOF HAN3MEL BEH EH
+                //NEGEBE EL URLS
+                    //LKOL URL NCALL ROBOTS
+                    //LKOL URL NCHECK ENAHA MSH MAWGODA
+                    //LW MSH MAWGODA W EL ROBOTS AMAN NEZAWEDHA FEL DATABASE
+                //NE2LEB EL ISVISITED NE5ALEHA TRUE    
+            
+            
+        }catch(MalformedURLException ex){
+            System.out.println(ex.getMessage());
+        
         } catch (IOException ex) {
+
             System.out.println(ex.getMessage());
         }
     }

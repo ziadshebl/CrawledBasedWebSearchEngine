@@ -1,4 +1,5 @@
 package com.webbasedcrawlerapt.WebBasedCrawlerProject.Services;
+import java.util.List;
 import java.util.Optional;
 
 import com.webbasedcrawlerapt.WebBasedCrawlerProject.Models.UncrawledSite;
@@ -44,11 +45,18 @@ public class UncrawledSiteService {
 		
 	}
 
-	public ResponseEntity<?> checkIfSiteExists(String urlToFind){
-		
-		System.out.println("URLLLLLL:"+urlToFind);
-		UncrawledSite site = uncrawledSiteRepository.checkIfSiteExists(urlToFind);
-		System.out.println(site);
-		return new ResponseEntity<>(site, HttpStatus.OK);
+	public List<UncrawledSite> findUncrawledSiteByUrl(String urlToFind){
+
+		List<UncrawledSite> sites = uncrawledSiteRepository.findUncrawledSiteByUrl(urlToFind);
+		return sites;
+	}
+
+	public List<UncrawledSite> findUncrawledSiteByIsNotVisited(){
+		List<UncrawledSite> sites = uncrawledSiteRepository.findUncrawledSiteByIsNotVisited();
+		return sites;
+	}
+
+	public void updateIsVisitedById(int id){
+		uncrawledSiteRepository.updateIsVisitedById(id);
 	}
 }
