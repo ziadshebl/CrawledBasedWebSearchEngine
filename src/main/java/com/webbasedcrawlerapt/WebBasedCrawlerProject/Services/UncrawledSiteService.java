@@ -46,10 +46,17 @@ public class UncrawledSiteService {
 	}
 
 	public List<UncrawledSite> findUncrawledSiteByUrl(String urlToFind){
-		
-		System.out.println("URLLLLLL:"+urlToFind);
-		List<UncrawledSite> site = uncrawledSiteRepository.findUncrawledSiteByUrl(urlToFind);
 
-		return site;
+		List<UncrawledSite> sites = uncrawledSiteRepository.findUncrawledSiteByUrl(urlToFind);
+		return sites;
+	}
+
+	public List<UncrawledSite> findUncrawledSiteByIsNotVisited(){
+		List<UncrawledSite> sites = uncrawledSiteRepository.findUncrawledSiteByIsNotVisited();
+		return sites;
+	}
+
+	public void updateIsVisitedById(int id){
+		uncrawledSiteRepository.updateIsVisitedById(id);
 	}
 }

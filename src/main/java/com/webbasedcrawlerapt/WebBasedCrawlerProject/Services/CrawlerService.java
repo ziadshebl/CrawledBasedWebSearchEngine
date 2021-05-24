@@ -3,7 +3,9 @@ package com.webbasedcrawlerapt.WebBasedCrawlerProject.Services;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.MalformedInputException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -12,6 +14,7 @@ import com.webbasedcrawlerapt.WebBasedCrawlerProject.Models.UncrawledSite;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -47,6 +50,7 @@ public class CrawlerService {
 
     //TODO: THREADING
     public void startCrawling() {
+
         try {
 
             //RUN SEEDS AND ADD IT TO THE DATABASE
@@ -55,10 +59,43 @@ public class CrawlerService {
                 uncrawledSiteService.addUncrawledSite(x, false);
             }
 
-            String siteUrl = "https://www.geeksforgeeks.org/";
-            List<UncrawledSite> temp = uncrawledSiteService.findUncrawledSiteByUrl(siteUrl);
-            System.out.println(temp.size());
-            Document doc = Jsoup.connect(siteUrl).userAgent("Mozilla").get();
+            int count = seeds.size();
+            List<UncrawledSite> sites = uncrawledSiteService.findUncrawledSiteByIsNotVisited();
+          
+            //LW MAWSELTESH LEL LIMIT BTA3Y W LESA 3ANDY 7AGAT NOT VISITED
+            while (count!=50 && sites.size()!=0){
+                String siteUrl = sites.get(0).getUrl();
+                //TODO: CHECK ROBOTS HENA
+                Document doc = Jsoup.connect(siteUrl).userAgent("Mozilla").get();
+                Elements links = doc.select("a");
+                
+                links.forEach((link)->{
+                    String urlString = link.attr("abs:href");
+                    URL url;
+                    try {
+                        url = new URL(urlString);
+                        //CHECK EL PROTOCOL 3LSHAN LW FEH MAILTO: BADAL HTTPS AW HTTP
+                        if (url.getProtocol().equals("https") || url.getProtocol().equals("http")){
+                           
+                            //AT2AKED ENO MSH MAWGODA FEL DATABASE ALREADY
+                            List<UncrawledSite> temp = uncrawledSiteService.findUncrawledSiteByUrl(urlString);
+                            if(temp.size()==0){
+                                System.out.println(urlString);
+                                //ADD IT FEL DATABASE
+                                uncrawledSiteService.addUncrawledSite(urlString, false);
+                            }
+                        }
+                    } catch (MalformedURLException e) {
+                        System.out.println(e.getMessage());
+                    }   
+                });
+                //NE2LEB EL ISVISITED W NEZAWED EL COUNT
+                uncrawledSiteService.updateIsVisitedById(sites.get(0).getId());
+                count+=1;
+
+                sites = uncrawledSiteService.findUncrawledSiteByIsNotVisited();
+            }
+
 
             //(SORTED)WHILE THERE URLS WITH FALSE ISVISITED ATTRIBUTE || REACH LIMIT
                 //HANEMSEK AWEL WA7DA
@@ -70,8 +107,11 @@ public class CrawlerService {
                 //NE2LEB EL ISVISITED NE5ALEHA TRUE    
             
             
-
+        }catch(MalformedURLException ex){
+            System.out.println(ex.getMessage());
+        
         } catch (IOException ex) {
+
             System.out.println(ex.getMessage());
         }
     }
