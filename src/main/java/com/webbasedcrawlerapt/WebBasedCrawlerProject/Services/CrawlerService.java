@@ -2,10 +2,10 @@ package com.webbasedcrawlerapt.WebBasedCrawlerProject.Services;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-// import java.nio.charset.MalformedInputException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -49,6 +49,7 @@ public class CrawlerService {
 
     //TODO: THREADING
     public void startCrawling() {
+        downloadAndSave("testHtml", "https://stackoverflow.com/");
 
         try {
 
@@ -73,7 +74,7 @@ public class CrawlerService {
                 links.forEach((link)->{
                     String urlString = link.attr("abs:href");
                     boolean checkRobotsTxt = checkRobots(urlString);
-                    System.out.println(urlString+"      //       "+checkRobotsTxt);
+                    // System.out.println(urlString+"      //       "+checkRobotsTxt);
                     if (checkRobotsTxt)
                     {
                     URL url;
@@ -173,6 +174,33 @@ public class CrawlerService {
 
         }
         return true;
+
+    }
+
+    //THIS FUNCTION IS BOOLEAN FOR ONLY 1 REASON IF IT FAILED TO CONNECT TO THE GIVEN URL IT WILL RETURN FALSE
+    public boolean downloadAndSave(String fileName , String inUrl)
+    {
+        
+        Document doc;
+        try {
+            doc = Jsoup.connect(inUrl).ignoreContentType(true).userAgent("Mozilla").get();
+            String htmlContent = doc.html();
+            File output = new File(fileName + ".html");
+            FileWriter writer = new FileWriter(output);
+
+            writer.write(htmlContent);
+            writer.flush();
+            writer.close();
+
+
+        } catch (IOException e) {
+            
+            e.printStackTrace();
+            System.out.println("Error in Connection!");
+            return false;
+        }
+        return true;
+        
 
     }
 }
