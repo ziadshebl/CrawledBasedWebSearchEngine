@@ -2,10 +2,10 @@ package com.webbasedcrawlerapt.WebBasedCrawlerProject.Services;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.charset.MalformedInputException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -28,7 +28,7 @@ public class CrawlerService {
     public ArrayList<String> readSeeds(){
         ArrayList<String> data = new ArrayList<String>() ;
         try {
-            File txt = new File("C:/Users/Ziadkamal/Desktop/Senior-1/APT/WebBasedCrawlerProject/WebBasedCrawlerProject/src/seeds.txt");
+            File txt = new File("D:/CCE/CCE SENIOR 1/APT/projectV4/CrawledBasedWebSearchEngine/src/seeds.txt");
             Scanner scan;
             
             scan = new Scanner(txt);
@@ -39,7 +39,6 @@ public class CrawlerService {
             scan.close();
            
         } catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         return data;
@@ -50,6 +49,7 @@ public class CrawlerService {
 
     //TODO: THREADING
     public void startCrawling() {
+        downloadAndSave("testHtml", "https://stackoverflow.com/");
 
         try {
 
@@ -65,12 +65,18 @@ public class CrawlerService {
             //LW MAWSELTESH LEL LIMIT BTA3Y W LESA 3ANDY 7AGAT NOT VISITED
             while (count!=50 && sites.size()!=0){
                 String siteUrl = sites.get(0).getUrl();
-                //TODO: CHECK ROBOTS HENA
+
+                //TODO: CHECK ROBOTS HENA //(no need to check robots for seeds, any other url will be checked befor inserting in in DB)//
+                //ALTER TABLE uncrawled_sites MODIFY url VARCHAR(1000) ; //run this query in DB//
                 Document doc = Jsoup.connect(siteUrl).userAgent("Mozilla").get();
                 Elements links = doc.select("a");
                 
                 links.forEach((link)->{
                     String urlString = link.attr("abs:href");
+                    boolean checkRobotsTxt = checkRobots(urlString);
+                    // System.out.println(urlString+"      //       "+checkRobotsTxt);
+                    if (checkRobotsTxt)
+                    {
                     URL url;
                     try {
                         url = new URL(urlString);
@@ -80,7 +86,7 @@ public class CrawlerService {
                             //AT2AKED ENO MSH MAWGODA FEL DATABASE ALREADY
                             List<UncrawledSite> temp = uncrawledSiteService.findUncrawledSiteByUrl(urlString);
                             if(temp.size()==0){
-                                System.out.println(urlString);
+                                //System.out.println(urlString);
                                 //ADD IT FEL DATABASE
                                 uncrawledSiteService.addUncrawledSite(urlString, false);
                             }
@@ -88,6 +94,7 @@ public class CrawlerService {
                     } catch (MalformedURLException e) {
                         System.out.println(e.getMessage());
                     }   
+                }
                 });
                 //NE2LEB EL ISVISITED W NEZAWED EL COUNT
                 uncrawledSiteService.updateIsVisitedById(sites.get(0).getId());
@@ -111,7 +118,6 @@ public class CrawlerService {
             System.out.println(ex.getMessage());
         
         } catch (IOException ex) {
-
             System.out.println(ex.getMessage());
         }
     }
@@ -121,8 +127,8 @@ public class CrawlerService {
             URL urlObj = null;
             urlObj = new URL(url);
             String path = urlObj.getPath();
-            //String[] pathArray = path.split("/");
-            // String queryParameter = urlObj.getQuery();
+            if(path.contains("#"))
+                return false;
             String robotsFileUrl = urlObj.getProtocol() + "://" + urlObj.getHost() + "/robots.txt";
             Document doc = Jsoup.connect(robotsFileUrl).ignoreContentType(true).userAgent("Mozilla").get();
             String robotsText = doc.text();
@@ -141,19 +147,17 @@ public class CrawlerService {
                 if((robotTextArray[i-1]).equals( "Disallow:"))
                 {
                     if((robotTextArray[i]).equals( "/")) //All are disallowed
-                        return false;
-
-                    if((robotTextArray[i]).contains(path))
                     {
                         return false;
                     }
-
-                // String[] disallowedPath = (robotTextArray[i]).split("/");
-                // for(int x =0 ; x< Math.min(disallowedPath.length, pathArray.length) ; x++)
-                // {
-                //     if((pathArray[x]).equals(disallowedPath[x]))
-                //         return false;
-                // }
+                        
+                    if(!path.equals("/"))
+                    {
+                        if((robotTextArray[i]).contains(path))
+                        {
+                            return false;
+                        }
+                    }
                 }
                 else if((robotTextArray[i-1]).equals( "Allow:"))
                 {
@@ -166,9 +170,37 @@ public class CrawlerService {
 
             }
         } catch (IOException ex) {
+            return false;
 
         }
         return true;
+
+    }
+
+    //THIS FUNCTION IS BOOLEAN FOR ONLY 1 REASON IF IT FAILED TO CONNECT TO THE GIVEN URL IT WILL RETURN FALSE
+    public boolean downloadAndSave(String fileName , String inUrl)
+    {
+        
+        Document doc;
+        try {
+            doc = Jsoup.connect(inUrl).ignoreContentType(true).userAgent("Mozilla").get();
+            String htmlContent = doc.html();
+            File output = new File(fileName + ".html");
+            FileWriter writer = new FileWriter(output);
+
+            writer.write(htmlContent);
+            writer.flush();
+            writer.close();
+
+
+        } catch (IOException e) {
+            
+            e.printStackTrace();
+            System.out.println("Error in Connection!");
+            return false;
+        }
+        return true;
+        
 
     }
 }
