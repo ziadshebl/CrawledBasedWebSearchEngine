@@ -5,7 +5,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.charset.MalformedInputException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -74,6 +73,7 @@ public class CrawlerService {
                     URL url;
                     try {
                         url = new URL(urlString);
+
                         //CHECK EL PROTOCOL 3LSHAN LW FEH MAILTO: BADAL HTTPS AW HTTP
                         if (url.getProtocol().equals("https") || url.getProtocol().equals("http")){
                            
