@@ -26,7 +26,6 @@ public class WordController {
     public ResponseEntity<?> getAllReservations(@PathVariable("word") String word) {
 
         //word = word.toLowerCase();
-        System.out.println("INSIDEEEE");
         String stemmedWord = Stemmer.stem(word);
         return wordService.getAllWebsitesByWord(stemmedWord);       
 

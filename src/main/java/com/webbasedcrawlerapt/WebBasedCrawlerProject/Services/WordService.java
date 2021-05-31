@@ -34,10 +34,17 @@ public class WordService {
     public ResponseEntity<?> getAllWebsitesByWord(String word){
         
         List<Word> words = mongoOperations.find( Query.query(Criteria.where("word").is(word)), Word.class, "Indexer");
-        Word result = words.get(0);
-        System.out.println(words.get(0).toString());
-        List<Website> websites = result.getWebsites();
-        return new ResponseEntity<>(websites, HttpStatus.OK);
+        if(!words.isEmpty()){
+            Word result = words.get(0);
+            System.out.println(words.get(0).toString());
+            List<Website> websites = result.getWebsites();
+            return new ResponseEntity<>(websites, HttpStatus.OK);
+        }else{
+            return new ResponseEntity<>(null,HttpStatus.OK);
+        }
+        
+        
+       
     }
 
 }
