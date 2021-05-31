@@ -65,18 +65,15 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration>
-					<mainClass>com.webbasedcrawlerapt.WebBasedCrawlerProject</mainClass>
-				</configuration>
-		
+				<version>1.2.5.RELEASE</version>
 				<executions>
 					<execution>
 						<goals>
 							<goal>repackage</goal>
 						</goals>
 					</execution>
-			   </executions>
-		</plugin>
+				</executions>
+			</plugin>
 			<!-- <plugin>
 				<groupId>com.heroku.sdk</groupId>
 				<artifactId>heroku-maven-plugin</artifactId>
