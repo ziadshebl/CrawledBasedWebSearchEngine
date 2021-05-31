@@ -22,7 +22,8 @@ public class WordController {
     
     @RequestMapping(path="/{word}")
     public ResponseEntity<?> getAllReservations(@PathVariable("word") String word) {
-        word = word.toLowerCase();
+
+        //word = word.toLowerCase();
         String stemmedWord = Stemmer.stem(word);
         return wordService.getAllWebsitesByWord(stemmedWord);       
 
