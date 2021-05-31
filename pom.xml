@@ -14,7 +14,8 @@
 	<name>WebBasedCrawlerProject</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
-		<java.version>11</java.version>
+		<java.version>16</java.version>
+		<jdkVersion>1.6</jdkVersion>
 	</properties>
 	<dependencies>
 	<dependency>
