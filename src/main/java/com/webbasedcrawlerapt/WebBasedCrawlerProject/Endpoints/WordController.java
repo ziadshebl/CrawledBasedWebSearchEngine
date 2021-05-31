@@ -20,24 +20,14 @@ public class WordController {
         this.wordService = wordService;
     }
 
-    
-    // @RequestMapping(params = "/{word}")
     @RequestMapping(method = RequestMethod.GET, value = "/{word}")
     public ResponseEntity<?> getAllReservations(@PathVariable("word") String word) {
 
-        //word = word.toLowerCase();
+        word = word.toLowerCase();
         String stemmedWord = Stemmer.stem(word);
         return wordService.getAllWebsitesByWord(stemmedWord);       
 
     }
-
-    // @RequestMapping(params = "/")
-    // public String root(@PathVariable("word") String word) {
-
-      
-    //     return "Welcome to doodle";       
-
-    // }
 
 }
 
