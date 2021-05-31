@@ -15,7 +15,7 @@
 	<description>Demo project for Spring Boot</description>
 	<properties>
 		<java.version>16</java.version>
-		<jdkVersion>1.6</jdkVersion>
+		<maven.compiler.release>16</maven.compiler.release>
 	</properties>
 	<dependencies>
 	<dependency>
@@ -65,28 +65,25 @@
 
 	</dependencies>
 
-	<!-- <build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-		</plugins>
-	</build> -->
+
 
 	<build>
 		<plugins>
-			<plugin>
+			<!-- <plugin>
 				<groupId>com.heroku.sdk</groupId>
 				<artifactId>heroku-maven-plugin</artifactId>
 				<version>3.6.2</version>
-			  </plugin>
-			<!-- <plugin>
-				<inherited>true</inherited>
+			  </plugin> -->
+			  <plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>              
-			</plugin> -->
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.8.1</version>
+				<configuration>
+					<release>16</release>
+				</configuration>
+			</plugin>
 		</plugins>
+		
 	</build>
 	
 </project>
