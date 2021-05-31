@@ -30,6 +30,14 @@ public class WordController {
 
     }
 
+    @GetMapping(params = "/")
+    public String root(@PathVariable("word") String word) {
+
+      
+        return "Welcome to doodle";       
+
+    }
+
 }
 
 class Stemmer{
