@@ -22,7 +22,8 @@ public class WordController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/{word}")
     public ResponseEntity<?> getAllReservations(@PathVariable("word") String word, @RequestParam("pageSize") int pageSize, @RequestParam("pageNum") int pageNum) {
-
+        System.out.println("PAGE NUMBER : "+pageNum);
+        System.out.println("PAGE SIZE : "+pageSize);
         word = word.toLowerCase();
         
         return wordService.getAllWebsitesByWord(word, pageSize, pageNum);       
