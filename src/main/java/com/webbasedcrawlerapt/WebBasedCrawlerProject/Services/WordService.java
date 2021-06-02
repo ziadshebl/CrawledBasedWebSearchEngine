@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import opennlp.tools.stemmer.PorterStemmer;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -53,26 +54,26 @@ public class WordService {
         word = Stemmer.stem(word);
         List<Word> words = mongoOperations.find( Query.query(Criteria.where("word").is(word)), Word.class, "Indexer");
    
-      
+        List<Website> websitesToSend = new ArrayList<Website>();
         if(!words.isEmpty()){
             Word result = words.get(0);
             System.out.println(words.get(0).toString());
             List<Website> websites = result.getWebsites();
             int size = websites.size();
-            
-            if(pageSize!=0 && pageNum!=0){
+           
+            if(pageSize!=0 && pageNum!=0 && pageSize*pageNum<size){
                 if(pageSize*pageNum+pageSize<size){
-                    websites = websites.subList(pageSize*pageNum, pageSize*pageNum+pageSize);
+                    websitesToSend = websites.subList(pageSize*pageNum, pageSize*pageNum+pageSize);
                 }else{
-                    websites = websites.subList(pageSize*pageNum, size);
+                    websitesToSend = websites.subList(pageSize*pageNum, size);
                 }
             }
            
            
-            return new ResponseEntity<>(websites, HttpStatus.OK);
+            return new ResponseEntity<>(websitesToSend, HttpStatus.OK);
             
         }else{
-            return new ResponseEntity<>(null,HttpStatus.OK);
+            return new ResponseEntity<>(websitesToSend,HttpStatus.OK);
         }
         
         
