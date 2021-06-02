@@ -1,7 +1,16 @@
 package com.webbasedcrawlerapt.WebBasedCrawlerProject.Services;
 
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Updates;
+import com.webbasedcrawlerapt.WebBasedCrawlerProject.Models.Suggestion;
 import com.webbasedcrawlerapt.WebBasedCrawlerProject.Models.Website;
 import com.webbasedcrawlerapt.WebBasedCrawlerProject.Models.Word;
+
+import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -10,6 +19,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import opennlp.tools.stemmer.PorterStemmer;
+
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 
@@ -20,9 +33,27 @@ public class WordService {
     private MongoOperations mongoOperations;
 
     public ResponseEntity<?> getAllWebsitesByWord(String word, int pageSize, int pageNum){
+
+
+        MongoClient mongoClient = MongoClients.create("mongodb+srv://rootUser:webcrawler_1@cluster0.gsdmf.mongodb.net/CrawlerAndIndexer?w=majority");
+        MongoDatabase mDatabase = mongoClient.getDatabase("CrawlerAndIndexer");
+        MongoCollection<Document> suggestionsCollection = mDatabase.getCollection("Suggestions");
+        Document updateResult = suggestionsCollection.findOneAndUpdate(Filters.eq("word", word), Updates.inc("frequency", 1));
+        if(updateResult==null){
+              
+            Document myDoc = new Document();
+        
+            myDoc.put("word", word);
+            myDoc.put("frequency", 1);
+            suggestionsCollection.insertOne(myDoc);
+        }
         
 
+        
+        word = Stemmer.stem(word);
         List<Word> words = mongoOperations.find( Query.query(Criteria.where("word").is(word)), Word.class, "Indexer");
+   
+      
         if(!words.isEmpty()){
             Word result = words.get(0);
             System.out.println(words.get(0).toString());
@@ -48,4 +79,37 @@ public class WordService {
        
     }
 
+
+    public ResponseEntity<?> getSuggestions(String word){
+        
+
+        List<Suggestion> suggestions = mongoOperations.find( Query.query(Criteria.where("word").regex('^'+word)), Suggestion.class, "Suggestions");
+        
+        Collections.sort(suggestions, new Comparator<Suggestion>() {
+            @Override
+            public int compare(Suggestion lhs, Suggestion rhs) {
+                return lhs.frequency > rhs.frequency ? -1 : (lhs.frequency < rhs.frequency) ? 1 : 0;
+            }
+        });
+
+        if(!suggestions.isEmpty()){   
+            return new ResponseEntity<>(suggestions, HttpStatus.OK);
+            
+        }else{
+            return new ResponseEntity<>(null,HttpStatus.OK);
+        }
+        
+        
+       
+    }
+
+}
+
+class Stemmer{
+    public static String stem(String word){
+        PorterStemmer porterStemmer = new PorterStemmer();
+        String stem = porterStemmer.stem(word);
+
+        return stem;
+    }
 }
