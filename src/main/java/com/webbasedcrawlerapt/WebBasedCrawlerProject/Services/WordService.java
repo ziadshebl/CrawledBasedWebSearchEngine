@@ -61,7 +61,7 @@ public class WordService {
             List<Website> websites = result.getWebsites();
             int size = websites.size();
            
-            if(pageSize!=0 && pageNum!=0 && pageSize*pageNum<size){
+            if(pageSize!=0 && pageSize*pageNum<size){
                 if(pageSize*pageNum+pageSize<size){
                     websitesToSend = websites.subList(pageSize*pageNum, pageSize*pageNum+pageSize);
                 }else{
