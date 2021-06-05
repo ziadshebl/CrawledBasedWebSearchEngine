@@ -8,8 +8,4 @@ import org.springframework.stereotype.Repository;
 
 
 @Repository
-public interface WordRepository extends CrudRepository<Word, String> {
-
-  // public Word findByWord(String word);
- 
-}
+public interface WordRepository extends CrudRepository<Word, String> {}
